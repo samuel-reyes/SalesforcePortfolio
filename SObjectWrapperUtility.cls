@@ -1,17 +1,24 @@
 public with sharing class SObjectWrapperUtility
 {
+	/**  Worth noting I would not use this in every use case. This is if I already have a list of SObjects ready to go.
+	Also, I primarily wrote this to see if this approach would work. If you are going to need to do some extra 
+	SOQL querying, you could iterate through the records and populate fields in their constructor at instantiation,
+	and they should appear with null values as well.
+	**/
+	
+	
 	private Set<String> objectFields {get;set;}
 	private SObjectType objectType {get;set;}
 	public SObject[] records {get;set;}
 	public String jsonString;
 
 	/**
-    * @author Samuel Reyes
-    * @date 2020-01-13
-    * @description Constructor(s) for class to perform initial setup tasks required to work properly.
-    * @param SObjectType objType - The Schema defined type of object whose fields we need to check against.
-    * @param SObject[] items - A list of instantiated SObjects for any single SObjectType.
-    */
+    	* @author Samuel Reyes
+    	* @date 2020-01-13
+    	* @description Constructor(s) for class to perform initial setup tasks required to work properly.
+    	* @param SObjectType objType - The Schema defined type of object whose fields we need to check against.
+    	* @param SObject[] items - A list of instantiated SObjects for any single SObjectType.
+    	*/
 	public SObjectWrapperUtility(SObjectType objType, SObject[] items)
 	{
 		this.objectType = objType;
@@ -30,16 +37,16 @@ public with sharing class SObjectWrapperUtility
 	}
 
 	/**
-    * @author Samuel Reyes
-    * @date 2020-01-13
-    * @description Typically Salesforce will take records returned from Apex, and pass them to the front end with any null
-    * values as empty object keys. This creates problems when trying to sort records via Javascript. This wrapper will
-    * process the records prior to their being sent to the front end, and restores all unpopulated field keys.
-    * This does NOT SOQL query any missing field values, but will simply restore keys for records passed into it.
-    * @param SObject[] items - A list of instantiated SObjects for any single SObjectType.
-    * Wrapper currently only supports wrapping types of one item.
-    * @return JSON string ready to be passed to front end Javascript.
-    */
+    	* @author Samuel Reyes
+    	* @date 2020-01-13
+    	* @description Typically Salesforce will take records returned from Apex, and pass them to the front end with any null
+    	* values as empty object keys. This creates problems when trying to sort records via Javascript. This wrapper will
+    	* process the records prior to their being sent to the front end, and restores all unpopulated field keys.
+    	* This does NOT SOQL query any missing field values, but will simply restore keys for records passed into it.
+    	* @param SObject[] items - A list of instantiated SObjects for any single SObjectType.
+    	* Wrapper currently only supports wrapping types of one item.
+    	* @return JSON string ready to be passed to front end Javascript.
+    	*/
 	private String generateJSON(SObject[] items)
 	{
 		this.records = new SObject[0];
