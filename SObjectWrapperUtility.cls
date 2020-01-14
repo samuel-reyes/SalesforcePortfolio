@@ -1,12 +1,11 @@
 public with sharing class SObjectWrapperUtility
 {
-	/**  Worth noting I would not use this in every use case. This is if I already have a list of SObjects ready to go.
-	Also, I primarily wrote this to see if this approach would work. If you are going to need to do some extra 
-	SOQL querying, you could iterate through the records and populate fields in their constructor at instantiation,
-	and they should appear with null values as well if that is your goal.
+	/**  An experiment to provide a solution for handling null values for fields when converting to JSON, because Apex
+	likes to drop null field keys on conversion to JSON.
 	
 	The main thing I was after here was writing one that would populate any missing field value, and would be dynamic-ish
-	when new fields are added to the SObject and we wanted to include null values for them.
+	when new fields are added to the SObject and we wanted to include null values for them. This does not query any missing
+	field values, it simply sets any unpopulated values to null so the fields can be included in JSON conversion.
 	
 	The idea was that I would use this to quickly prep records for passing to a JS controller for use with LWC or Aura,
 	and then have existing object keys for use with Javascript array.sort().
@@ -36,6 +35,7 @@ public with sharing class SObjectWrapperUtility
 		for( String fieldName : fieldMap.keySet() )
 		{
 			Schema.SObjectField currentField = fieldMap.get(fieldName);
+			//Check specifically for fields that are writeable.
 			if(currentField.getDescribe().isUpdateable()){ this.objectFields.add(currentField.getDescribe().getName()); }
 		}
 
@@ -63,16 +63,10 @@ public with sharing class SObjectWrapperUtility
 
 			for(String field : this.objectFields)
 			{
-				if(!populatedFields.contains(field))
-				{
-					item.put(field,null);
-				}
+				if(!populatedFields.contains(field)){ item.put(field,null); }
 			}
 			this.records.add(item);
 		}
 		return JSON.serialize(this.records);
 	}
-
-
-
 }
