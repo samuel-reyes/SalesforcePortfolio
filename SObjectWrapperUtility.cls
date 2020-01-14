@@ -3,7 +3,13 @@ public with sharing class SObjectWrapperUtility
 	/**  Worth noting I would not use this in every use case. This is if I already have a list of SObjects ready to go.
 	Also, I primarily wrote this to see if this approach would work. If you are going to need to do some extra 
 	SOQL querying, you could iterate through the records and populate fields in their constructor at instantiation,
-	and they should appear with null values as well.
+	and they should appear with null values as well if that is your goal.
+	
+	The main thing I was after here was writing one that would populate any missing field value, and would be dynamic-ish
+	when new fields are added to the SObject and we wanted to include null values for them.
+	
+	The idea was that I would use this to quickly prep records for passing to a JS controller for use with LWC or Aura,
+	and then have existing object keys for use with Javascript array.sort().
 	**/
 	
 	
