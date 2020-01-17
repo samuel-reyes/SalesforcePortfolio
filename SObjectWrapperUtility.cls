@@ -26,7 +26,7 @@ public with sharing class SObjectWrapperUtility
 	**/
 	
 	/** Map<FieldName,IsFieldWriteable> **/
-	private Map<String, Boolean> objectFields {get;set;}
+	private Set<String> objectFields {get;set;}
 	public String jsonString;
 
 	/**
@@ -39,7 +39,7 @@ public with sharing class SObjectWrapperUtility
 	public SObjectWrapperUtility(SObjectType objType, SObject[] items)
 	{
 
-		this.objectFields = new Map<String,Boolean>();
+		this.objectFields = new Set<String>();
 		System.debug(LoggingLevel.DEBUG, 'SObjectWrapperUtility has been initialized with objType :: ' + objType.getDescribe().getName());
 
 		Map<String, Schema.SObjectField> fieldMap = objType.getDescribe().fields.getMap();
@@ -47,8 +47,7 @@ public with sharing class SObjectWrapperUtility
 		for( String fieldName : fieldMap.keySet() )
 		{
 			Schema.SObjectField currentField = fieldMap.get(fieldName);
-			if(currentField.getDescribe().isUpdateable()){ this.objectFields.put(currentField.getDescribe().getName(),true); }
-			else{ this.objectFields.put(currentField.getDescribe().getName(),false); }
+			this.objectFields.put(currentField.getDescribe().getName()) }
 		}
 
 		this.jsonString = this.generateJSON(items);
@@ -75,7 +74,7 @@ public with sharing class SObjectWrapperUtility
 			Set<String> populatedFields = item.getPopulatedFieldsAsMap().keySet();
 			System.debug(LoggingLevel.FINE, 'populatedFields output :: ' + populatedFields);
 
-			for(String field : this.objectFields.keySet())
+			for(String field : this.objectFields)
 			{
 				if(!populatedFields.contains(field))
 				{
