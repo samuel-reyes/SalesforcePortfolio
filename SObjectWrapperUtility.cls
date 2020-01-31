@@ -25,81 +25,67 @@ public with sharing class SObjectWrapperUtility
 	
 	**/
 	
-	/** Map<FieldName,IsFieldWriteable> **/
-	private Set<String> objectFields {get;set;}
-	public String jsonString;
+	/**
+	* General Use Note: This is not something you would want to use with larger SObjects that have a ton
+	* of fields. This should be exclusively used by smaller objects with minimal fields.
+	* Otherwise you should plan to use an Apex Wrapper class.
+	* Even though this is a quick solution, it also has a larger heap size. While not an
+	* issue with smaller sobjects, it will absolutely be one with larger ones.
+	* **/
+
+	private static Set<String> objectFields {get;set;}
 
 	/**
-    	* @author Samuel Reyes
-    	* @date 2020-01-13
-    	* @description Constructor(s) for class to perform initial setup tasks required to work properly.
-    	* @param SObjectType objType - The Schema defined type of object whose fields we need to check against.
-    	* @param SObject[] items - A list of instantiated SObjects for any single SObjectType.
-    	*/
-	public SObjectWrapperUtility(SObjectType objType, SObject[] items)
+    * @author Samuel Reyes
+    * @date 2020-01-13
+    * @description Constructor(s) for class to perform initial setup tasks required to work properly.
+    * @param SObjectType objType - The Schema defined type of object whose fields we need to check against.
+    * @param SObject[] items - A list of instantiated SObjects for any single SObjectType.
+    */
+	public static String buildString(SObjectType objType, SObject[] items)
 	{
-
-		this.objectFields = new Set<String>();
-		System.debug(LoggingLevel.DEBUG, 'SObjectWrapperUtility has been initialized with objType :: ' + objType.getDescribe().getName());
-
-		Map<String, Schema.SObjectField> fieldMap = objType.getDescribe().fields.getMap();
-
-		for( String fieldName : fieldMap.keySet() )
+		if(null == objectFields)
 		{
-			Schema.SObjectField currentField = fieldMap.get(fieldName);
-			this.objectFields.put(currentField.getDescribe().getName()) }
+			objectFields =  new Set<String>();
+			Schema.SObjectField[] fields = objType.getDescribe().fields.getMap().values();
+			for( Schema.SObjectField field : fields )
+			{
+				DescribeFieldResult currentField = field.getDescribe();
+				if(currentField.isUpdateable() && !currentField.isDeprecatedAndHidden()){ objectFields.add(currentField.getName()); }
+			}
 		}
 
-		this.jsonString = this.generateJSON(items);
-		System.debug(LoggingLevel.DEBUG, 'generated JSON string :: ' + this.jsonString);
+		return generateJSON(items);
 	}
 
 	/**
-	* @author Samuel Reyes
-	* @date 2020-01-13
-	* @description Typically Salesforce will take records returned from Apex, and pass them to the front end with any null
-	* values as empty object keys. This creates problems when trying to sort records via Javascript. This wrapper will
-	* process the records prior to their being sent to the front end, and restores all unpopulated field keys.
-	* This does NOT SOQL query any missing field values, but will simply restore keys for records passed into it.
-	* @param SObject[] items - A list of instantiated SObjects for any single SObjectType.
-	* Wrapper currently only supports wrapping types of one item.
-	* @return JSON string ready to be passed to front end Javascript.
-	*/
-	private String generateJSON(SObject[] items)
+    * @author Samuel Reyes
+    * @date 2020-01-13
+    * @description Typically Salesforce will take records returned from Apex, and pass them to the front end with any null
+    * values as empty object keys. This creates problems when trying to sort records via Javascript. This wrapper will
+    * process the records prior to their being sent to the front end, and restores all unpopulated field keys.
+    * This does NOT SOQL query any missing field values, but will simply restore keys for records passed into it.
+    * @param SObject[] items - A list of instantiated SObjects for any single SObjectType.
+    * Wrapper currently only supports wrapping types of one item.
+    * @return JSON string ready to be passed to front end Javascript.
+    */
+	private static String generateJSON(SObject[] items)
 	{
-		SObjectWrapper[] records = new SObjectWrapper[0];
+		SObject[] records = new SObject[0];
 		for(SObject item : items)
 		{
-			Map<String, Object> fields = new Map<String,Object>();
 			Set<String> populatedFields = item.getPopulatedFieldsAsMap().keySet();
 			System.debug(LoggingLevel.FINE, 'populatedFields output :: ' + populatedFields);
 
-			for(String field : this.objectFields)
+			for(String field : objectFields)
 			{
 				if(!populatedFields.contains(field))
 				{
-					fields.put(field,null);
-				}
-				else
-				{
-					fields.put(field, item.get(field));
+					item.put(field,null);
 				}
 			}
-			records.add(new SObjectWrapper((Id)item.get('Id'),fields));
+			records.add(item);
 		}
 		return JSON.serialize(records);
-	}
-
-
-	private class SObjectWrapper
-	{
-		public Id recordId {get;set;}
-		public Map<String,Object> fields {get;set;}
-
-		SObjectWrapper(Id recId, Map<String,Object> recFieldsMap)
-		{
-			this.recordId = recId;
-			this.fields = recFieldsMap;
-		}
 	}
 }
