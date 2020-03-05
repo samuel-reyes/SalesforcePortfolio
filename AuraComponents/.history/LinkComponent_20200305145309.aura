@@ -1,0 +1,78 @@
+<aura:component description="LinkContactAccount" controller="LinkContactActnPlnCmpnMemberController" implements="force:lightningQuickAction,force:hasRecordId">
+
+    <aura:attribute name="recordId" type="String" />
+
+    <aura:attribute name="record" type="Object"/>
+    <aura:attribute name="simpleRecord" type="Object"/>
+    <aura:attribute name="recordError" type="String"/>
+
+    <aura:attribute name="campMemberRecord" type="Object" />
+    <aura:attribute name="recordErrorCampMember" type="String"/>
+
+    <aura:attribute name="showMissingRecords" type="Boolean" default="false"/>
+
+    <aura:attribute name="showLinkButton" type="Boolean" default="true"/>
+    <aura:attribute name="showProcessing" type="Boolean" default="false"/>
+    <aura:attribute name="showSuccess" type="Boolean" default="false"/>
+    <aura:attribute name="showError" type="Boolean" default="false"/>
+    <aura:attribute name="successMessage" type="String" />
+
+    <force:recordData aura:id="recordLoad"
+                      layoutType="FULL"
+                      recordId="{!v.recordId}"
+                      targetError="{!v.recordError}"
+                      targetRecord="{!v.record}"
+                      targetFields ="{!v.simpleRecord}"
+                      mode="VIEW"/>
+
+    <force:recordData aura:id="campaignMemberRecordCreator" layoutType="FULL" targetRecord="{!v.campMemberRecord}" fields="ContactId,CampaignId" targetError="{!v.recordErrorCampMember}"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <article class="slds-card">
+
+        <div class="slds-card__header slds-grid slds-grid_vertical">
+
+            <header class="slds-media slds-media_center slds-grid--align-center ">
+                <div class="slds-media__body" style="padding-bottom: 20px; font-size: 14pt">
+                    <h2 class="slds-card__header-title">Linking the following records:</h2>
+                </div>
+            </header>
+
+            <div class="slds-card slds-grid--align-center slds-media__body">
+                <lightning:icon iconName="standard:contact" alternativeText="Contact" /> Contact: {!v.simpleRecord.Contact__r.Name}
+            </div>
+
+            <div class="slds-card slds-grid--align-center slds-media__body">
+                <lightning:icon iconName="standard:campaign" alternativeText="Campaign" /> Campaign: {!v.simpleRecord.Campaign__r.Name}
+            </div>
+
+        </div>
+
+        <aura:if isTrue="{!v.showLinkButton}">
+
+            <div style="float: right">
+                <lightning:button variant="brand" label="Create Campaign Member" iconName="utility:link" iconPosition="left" onclick="{!c.handleLinkRecords}"/>
+            </div>
+
+        </aura:if>
+
+        <aura:if isTrue="{!or(v.simpleRecord.Contact__c == null, v.simpleRecord.Campaign__c == null)}">
+
+            <div style="float: right">
+                <p>Action Plan is missing a related campaign, contact, or both. Cannot insert new Campaign Member unless both exist.</p>
+            </div>
+
+        </aura:if>
+
+        <div class="slds-card slds-grid--align-center">
+
+            <aura:if isTrue="{!v.showProcessing}"> <lightning:spinner alternative-text="Linking" size="medium"/>   Creating Campaign Member and Linking records... </aura:if>
+            <aura:if isTrue="{!v.showSuccess}"> <lightning:icon iconName="utility:success" alternativeText="Success" />   {!v.successMessage} </aura:if>
+            <aura:if isTrue="{!v.showError}"> <lightning:icon iconName="utility:error" alternativeText="Error" />   Failed to Link records or create Campaign Member. Please make sure Action Plan has a contact and campaign associated to it.</aura:if>
+
+        </div>
+
+    </article>
+
+</aura:component>
