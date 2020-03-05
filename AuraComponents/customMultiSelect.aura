@@ -1,3 +1,6 @@
+<!-- The below is a portion of a component I created. The rest of the component was quite generic, but 
+this multi select modal I created was part of it I found useful and copied for use in other places. -->
+
 <!--The below div set is a custom multi select MODAL component. SReyes -->
 	        <div class="slds-col">
 		        <label class="slds-form-element__label">Book Genre</label>
