@@ -1,4 +1,4 @@
-<aura:component description="LinkContactAccount" controller="LinkAccountContactController" implements="force:lightningQuickAction,force:hasRecordId">
+<aura:component description="LinkContactAccount" controller="LinkComponentController" implements="force:lightningQuickAction,force:hasRecordId">
 
     <aura:attribute name="recordId" type="String" />
 
