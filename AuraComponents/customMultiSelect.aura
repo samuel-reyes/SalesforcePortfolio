@@ -1,0 +1,27 @@
+<!--The below div set is a custom multi select MODAL component. SReyes -->
+	        <div class="slds-col">
+		        <label class="slds-form-element__label">Book Genre</label>
+			        <div class="slds-form-element multi-select-body">
+			            <aura:if isTrue="{!v.showGenres}">
+				            <lightning:buttonIcon iconName='utility:collapse_all' size="large" class="slds-icon spacer" alternativeText="Open" />
+				            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="modalMain slds-modal slds-fade-in-open">
+					            <div class="slds-modal__content modalContentWrapper">
+						            <div onclick="{!c.toggleAccordion}">
+							            <lightning:buttonIcon iconName='utility:chevronup' size="large" class="slds-icon closeButtonIcon" alternativeText="Close"/>
+							            Click To Close - Filters Apply On Selection
+						            </div>
+							        <lightning:card class="genreCard" variant="narrow">
+					                    <lightning:checkboxGroup class="checkboxGroup" label="{!v.searchOptions.genre}" value="{!v.searchOptions.genre}" options="{!v.genres}" onchange="{!c.onFilterChange}"/>
+							        </lightning:card>
+					            </div>
+				            </section>
+				            <div class="slds-backdrop slds-backdrop_open" onclick="{!c.toggleAccordion}"></div>
+					        <aura:set attribute="else">
+						        <div onclick="{!c.toggleAccordion}">
+					                <lightning:buttonIcon iconName='utility:chevrondown' size="large" class="slds-icon" alternativeText="Open"/>Click To Select Options
+						        </div>
+					        </aura:set>
+			            </aura:if>
+			        </div>
+		        </div>
+<!--End custom multi select component. SReyes -->
