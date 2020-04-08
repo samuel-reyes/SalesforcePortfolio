@@ -3,7 +3,14 @@ Feel free to use it, just add a comment saying where you got it from. -SReyes
 **/
 
 /**
-* Created by samuel-reyes on 4/7/2020.
+ * Created by samuel-reyes on 4/7/2020.
+ * WHEN TO USE THIS CLASS:
+ * The purpose of this class is to avoid firing off too many DML operations in a single given context.
+ * This allows necessary DML operations to be performed on related records, or even on the initial trigger records,
+ * in a new separate context of it's own. For example, if you've just upserted some records, and then need to do some
+ * operations that will update the self same records, rather than calling a second update operation in the same context,
+ * you can prepare the records and then instantiate this class. It will allow the current operation to finish, and allow
+ * the end user to move on however they need to, and will finish related updates asap. Usually within 30-60 seconds.
 */
 
 public with sharing class DMLUtility implements Queueable
