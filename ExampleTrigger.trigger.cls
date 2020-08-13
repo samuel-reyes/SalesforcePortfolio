@@ -1,6 +1,7 @@
 trigger SObjectTrigger on SObject (before insert, after insert, before update, after update, after delete)
 {
     //Example file has a .cls extension so it'll get formatting.
+    //This is a simple alternative to using the virtual class solution.
     
     //I have a mdt control pannel I like to use to control trigger contexts.
     //It can be as granular or high level as it needs to be, as you can create an individual TriggerControlPanels__mdt
@@ -16,11 +17,11 @@ trigger SObjectTrigger on SObject (before insert, after insert, before update, a
 
         if (Trigger.isAfter)
         {
-            ChargeOverSubLineItemTriggerHandler.doAfterTrigger(Trigger.new, Trigger.oldMap, isInsert, isUpdate, isDelete);
+            SObjectTriggerHandler.doAfterTrigger(Trigger.new, Trigger.oldMap, isInsert, isUpdate, isDelete);
         }
         if (Trigger.isBefore)
         {
-            ChargeOverSubLineItemTriggerHandler.doBeforeTrigger(Trigger.new, Trigger.oldMap, isInsert, isUpdate);
+            SObjectTriggerHandler.doBeforeTrigger(Trigger.new, Trigger.oldMap, isInsert, isUpdate);
         }
     }
 
