@@ -3,7 +3,7 @@ trigger SObjectTrigger on SObject (before insert, after insert, before update, a
     //Example file has a .cls extension so it'll get formatting.
     //This is a simple alternative to using the virtual class solution.
     
-    //I have a mdt control pannel I like to use to control trigger contexts.
+    //I have a mdt control pannel I like to use to control trigger contexts. This is a form a table driven trigger management.
     //It can be as granular or high level as it needs to be, as you can create an individual TriggerControlPanels__mdt
     //block you wish to control execution of. -SReyes
     
