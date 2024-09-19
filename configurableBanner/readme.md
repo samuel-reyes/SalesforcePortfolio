@@ -5,6 +5,7 @@ You can have as many on a page as you want and control the visibility settings s
 You can change the defaults below if you know what you want to display standard in your org, otherwise each value can be configured from the Lightning Page Builder within Salesforce.
 
 Javascript defaults:
+```
 @api backgroundColor = '#3470A8'; // Light blue
 @api textColor = 'White'; // White
 @api fontSize = '16px'; // Smaller font size
@@ -12,3 +13,4 @@ Javascript defaults:
 @api borderWidth = '2px'; // Thinner border
 @api borderStyle = 'solid'; // Keep solid
 @api borderRadius = '8px'; // Slightly more rounded
+```
