@@ -1,4 +1,4 @@
-This is a lightning web component. Lives on a record page in Salesforce. Customizable attributes.
+Replicates the random notices Salesforce will put at the top of a page in Salesforce sometimes. This is a lightning web component. Lives on a record page in Salesforce. Customizable attributes.
 
 You can have as many on a page as you want and control the visibility settings so they dynamically show when they are supposed to.
 
