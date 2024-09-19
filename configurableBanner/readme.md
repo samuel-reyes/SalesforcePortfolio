@@ -2,7 +2,7 @@ Replicates the random notices Salesforce will put at the top of a page in Salesf
 
 You can have as many on a page as you want and control the visibility settings so they dynamically show when they are supposed to.
 
-You can change the defaults below if you know what you want to display standard in your org, otherwise each value can be configured from the Lightning Page Builder within Salesforce.
+You can change the defaults below if you know what you want to display standard in your org, otherwise each value can be configured from the Lightning Page Builder within Salesforce. Visibility is controlled there as well via "Set Component Visibility."
 
 Javascript defaults:
 ```
